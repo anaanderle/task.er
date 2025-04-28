@@ -1,0 +1,13 @@
+services:
+  tasker-postgres:
+    image: postgres:15
+    container_name: tasker-postgres
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: tasker
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - ./init-tasker-postgres.sql:/docker-entrypoint-initdb.d/init-tasker-postgres.sql
+    ports:
+      - "54321:5432"
