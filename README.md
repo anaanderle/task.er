@@ -64,6 +64,7 @@ bash ./mvnw clean install
 - PostgreSQL
 - Docker
 - Swagger
+- Flyway
 
 ### Padrões 📝
 
