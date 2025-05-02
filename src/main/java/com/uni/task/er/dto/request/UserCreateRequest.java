@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class UserCreateRequest {
     private String name;
-    private LocalDate birthday;
+    private LocalDate birthDate;
     private String cellphone;
     private String email;
     private String password;
