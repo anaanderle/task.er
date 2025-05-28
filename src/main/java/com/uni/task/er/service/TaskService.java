@@ -3,6 +3,8 @@ package com.uni.task.er.service;
 import com.uni.task.er.dto.request.TaskCreateRequest;
 import com.uni.task.er.dto.request.TaskUpdateRequest;
 import com.uni.task.er.dto.response.TaskResponse;
+import com.uni.task.er.exception.custom.NotFoundException;
+import com.uni.task.er.mapper.TaskMapper;
 import com.uni.task.er.model.Task;
 import com.uni.task.er.model.User;
 import com.uni.task.er.repository.TaskRepository;
@@ -11,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,55 +27,42 @@ public class TaskService {
     }
 
     public TaskResponse create(TaskCreateRequest request) {
-        Task task = new Task();
-        task.setTitle(request.getTitle());
-        task.setDescription(request.getDescription());
-        task.setStatus(request.getStatus());
-        User user = userRepository.findById(request.getUserId()).orElse(null);
-        task.setUser(user);
+        User user = userRepository.findById(request.getUserId())
+            .orElseThrow(() -> new NotFoundException("User not found"));
+        Task task = TaskMapper.toModel(request, user);
         Task saved = taskRepository.save(task);
-        return toResponse(saved);
+        return TaskMapper.toResponse(saved);
     }
 
     public TaskResponse getById(Long id) {
-        Task task = taskRepository.findById(id).orElse(null);
-        return toResponse(task);
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Task not found"));
+        return TaskMapper.toResponse(task);
     }
 
     public List<TaskResponse> getByUserId(Long userId) {
-        return taskRepository.findByUserId(userId).stream().map(this::toResponse).collect(Collectors.toList());
+        if (userId == null) {
+            throw new NotFoundException("User ID is required");
+        }
+        return taskRepository.findByUserId(userId).stream()
+            .map(TaskMapper::toResponse)
+            .collect(Collectors.toList());
     }
 
     public TaskResponse update(Long id, TaskUpdateRequest request) {
-        Optional<Task> optionalTask = taskRepository.findById(id);
-        if (optionalTask.isEmpty()) return null;
-        Task task = optionalTask.get();
-        task.setTitle(request.getTitle());
-        task.setDescription(request.getDescription());
-        task.setStatus(request.getStatus());
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Task not found"));
+        Task updatedTask = TaskMapper.toModel(request, task);
         if (request.getUserId() != null) {
-            User user = userRepository.findById(request.getUserId()).orElse(null);
-            task.setUser(user);
+            User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new NotFoundException("User not found"));
+            updatedTask.setUser(user);
         }
-        Task saved = taskRepository.save(task);
-        return toResponse(saved);
+        Task saved = taskRepository.save(updatedTask);
+        return TaskMapper.toResponse(saved);
     }
 
     public void delete(Long id) {
         taskRepository.deleteById(id);
-    }
-
-    private TaskResponse toResponse(Task task) {
-        if (task == null) return null;
-        TaskResponse response = new TaskResponse();
-        response.setId(task.getId());
-        response.setTitle(task.getTitle());
-        response.setDescription(task.getDescription());
-        response.setStatus(task.getStatus());
-        if (task.getUser() != null) {
-            response.setUserId(task.getUser().getId());
-            response.setUserName(task.getUser().getName());
-        }
-        return response;
     }
 } 
