@@ -5,6 +5,7 @@ import com.uni.task.er.exception.custom.InvalidDataException;
 import com.uni.task.er.exception.custom.NotFoundException;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,6 +40,12 @@ public class GlobalExceptionHandler {
                 .map(v -> v.getPropertyPath() + " " + v.getMessage()).toArray(String[]::new);
 
         TaskerException taskerException = new TaskerException("CONSTRAINT_VIOLATION", details);
+        return new ResponseEntity<>(taskerException, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<TaskerException> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        TaskerException taskerException = new TaskerException("CONSTRAINT_VIOLATION", ex.getMessage());
         return new ResponseEntity<>(taskerException, HttpStatus.BAD_REQUEST);
     }
 
