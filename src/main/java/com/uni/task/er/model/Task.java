@@ -19,10 +19,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     private String title;
     private String description;
     private String status;
@@ -33,4 +29,9 @@ public class Task {
         this.status = status;
         this.user = user;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
