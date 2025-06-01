@@ -7,6 +7,7 @@ import com.uni.task.er.exception.custom.NotFoundException;
 import com.uni.task.er.mapper.UserMapper;
 import com.uni.task.er.model.User;
 import com.uni.task.er.repository.UserRepository;
+import com.uni.task.er.utils.PasswordUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,8 @@ public class UserService {
 
     @Transactional
     public UserResponse create(UserCreateRequest request) {
+        String hashedPassowrd = PasswordUtils.hashPassword(request.getPassword());
+        request.setPassword(hashedPassowrd);
         User user = UserMapper.toModel(request);
 
         return UserMapper.toResponse(userRepository.save(user));

@@ -3,6 +3,7 @@ package com.uni.task.er.exception.handler;
 import com.uni.task.er.exception.TaskerException;
 import com.uni.task.er.exception.custom.InvalidDataException;
 import com.uni.task.er.exception.custom.NotFoundException;
+import com.uni.task.er.exception.custom.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -42,4 +43,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(taskerException, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<TaskerException> handleUnauthorizedException(UnauthorizedException ex) {
+        TaskerException taskerException = new TaskerException(ex.getError(), ex.getMessage());
+        return new ResponseEntity<>(taskerException, HttpStatus.UNAUTHORIZED);
+    }
 }
