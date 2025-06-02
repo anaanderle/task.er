@@ -6,6 +6,7 @@ import com.uni.task.er.exception.custom.NotFoundException;
 import com.uni.task.er.exception.custom.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,9 +44,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(taskerException, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<TaskerException> handleUnauthorizedException(UnauthorizedException ex) {
-        TaskerException taskerException = new TaskerException(ex.getError(), ex.getMessage());
-        return new ResponseEntity<>(taskerException, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<TaskerException> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        TaskerException taskerException = new TaskerException("CONSTRAINT_VIOLATION", ex.getMessage());
+        return new ResponseEntity<>(taskerException, HttpStatus.BAD_REQUEST);
     }
 }

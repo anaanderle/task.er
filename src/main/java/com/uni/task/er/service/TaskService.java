@@ -19,11 +19,13 @@ import java.util.stream.Collectors;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final WebhookService webhookService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, UserRepository userRepository, WebhookService webhookService) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
+        this.webhookService = webhookService;
     }
 
     public TaskResponse create(TaskCreateRequest request) {
@@ -31,6 +33,9 @@ public class TaskService {
             .orElseThrow(() -> new NotFoundException("User not found"));
         Task task = TaskMapper.toModel(request, user);
         Task saved = taskRepository.save(task);
+
+        webhookService.sendMessageByUser(user, "Task " + saved.getTitle() + " criada!");
+
         return TaskMapper.toResponse(saved);
     }
 
@@ -59,10 +64,19 @@ public class TaskService {
             updatedTask.setUser(user);
         }
         Task saved = taskRepository.save(updatedTask);
+
+
+        webhookService.sendMessageByUser(task.getUser(), "Task " + saved.getTitle() + " editada!");
+
         return TaskMapper.toResponse(saved);
     }
 
     public void delete(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Task not found"));
+
         taskRepository.deleteById(id);
+
+        webhookService.sendMessageByUser(task.getUser(), "Task " + task.getTitle() + " deletada!");
     }
 } 
