@@ -12,6 +12,7 @@ import com.uni.task.er.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,9 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final WebhookService webhookService;
+
+    @Autowired
+    private GoogleCalendarService googleCalendarService;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, UserRepository userRepository, WebhookService webhookService) {
@@ -33,6 +37,19 @@ public class TaskService {
             .orElseThrow(() -> new NotFoundException("User not found"));
         Task task = TaskMapper.toModel(request, user);
         Task saved = taskRepository.save(task);
+
+        // Integrar com o Google Calendar
+        try {
+            googleCalendarService.criarEvento(
+                request.getTitle(), 
+                request.getDescription(), 
+                request.getStartDate(), 
+                request.getEndDate()
+            );
+        } catch (Exception e) {
+            // Trate o erro conforme sua necessidade
+            e.printStackTrace();
+        }
 
         webhookService.sendMessageByUser(user, "Task " + saved.getTitle() + " criada!");
 

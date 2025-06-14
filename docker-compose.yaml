@@ -4,6 +4,7 @@ services:
     container_name: tasker-app
     ports:
       - "8080:8080"
+      - "8888:8888"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tasker-database:5432/tasker

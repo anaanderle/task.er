@@ -10,4 +10,6 @@ public class TaskCreateRequest {
     private String description;
     private String status;
     private Long userId;
-} 
+    private java.util.Date startDate;
+    private java.util.Date endDate;
+}
