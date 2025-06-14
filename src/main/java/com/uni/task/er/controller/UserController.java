@@ -47,7 +47,7 @@ public class UserController {
                     description = "Dados inválidos",
                     content = @Content(schema = @Schema(implementation = TaskerException.class))),
     })
-    @PostMapping
+    @PostMapping("/register")
     public UserResponse create(@RequestBody UserCreateRequest request) {
         return userService.create(request);
     }

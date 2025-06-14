@@ -29,6 +29,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(taskerException, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<TaskerException> handleUnauthorizedException(UnauthorizedException ex) {
+        TaskerException taskerException = new TaskerException(ex.getError(), ex.getMessage());
+        return new ResponseEntity<>(taskerException, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(InvalidDataException.class)
     public ResponseEntity<TaskerException> handleInvalidDataException(InvalidDataException ex) {
         TaskerException taskerException = new TaskerException(ex.getError(), ex.getMessage());

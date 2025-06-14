@@ -17,6 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         InterceptorRegistration ir = registry.addInterceptor(authorizationInterceptor);
         ir.addPathPatterns("/**");
         ir.excludePathPatterns("/auth");
+        ir.excludePathPatterns("/users/register");
         ir.excludePathPatterns("/swagger-ui/**");
         ir.excludePathPatterns("/v3/api-docs/**");
     }

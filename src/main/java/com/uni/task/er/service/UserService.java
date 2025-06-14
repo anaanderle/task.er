@@ -3,6 +3,7 @@ package com.uni.task.er.service;
 import com.uni.task.er.dto.request.UserCreateRequest;
 import com.uni.task.er.dto.request.UserUpdateRequest;
 import com.uni.task.er.dto.response.UserResponse;
+import com.uni.task.er.exception.custom.InvalidDataException;
 import com.uni.task.er.exception.custom.NotFoundException;
 import com.uni.task.er.mapper.UserMapper;
 import com.uni.task.er.model.User;
@@ -40,6 +41,9 @@ public class UserService {
 
     @Transactional
     public UserResponse create(UserCreateRequest request) {
+        if(!request.getPassword().equals(request.getConfirmPassword()))
+            throw new InvalidDataException("Password and confirm password do not match");
+
         String hashedPassowrd = PasswordUtils.hashPassword(request.getPassword());
         request.setPassword(hashedPassowrd);
         User user = UserMapper.toModel(request);
