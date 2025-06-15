@@ -39,16 +39,23 @@ public class TaskService {
         Task saved = taskRepository.save(task);
 
         // Integrar com o Google Calendar
-        try {
-            googleCalendarService.criarEvento(
-                request.getTitle(), 
-                request.getDescription(), 
-                request.getStartDate(), 
-                request.getEndDate()
-            );
-        } catch (Exception e) {
-            // Trate o erro conforme sua necessidade
-            e.printStackTrace();
+        // Verifica se o usuário autorizou o Google Calendar
+        // Esta é uma verificação simplificada. Em um app real, você pode querer 
+        // verificar se um token válido existe para o usuário no GoogleCalendarService.
+        if (user.getId() != null) { // Adapte esta condição conforme sua lógica de autorização
+            try {
+                googleCalendarService.criarEvento(
+                    user.getId().toString(), // Passa o ID do usuário
+                    request.getTitle(),
+                    request.getDescription(),
+                    request.getStartDate(),
+                    request.getEndDate()
+                );
+            } catch (Exception e) {
+                // Trate o erro conforme sua necessidade, por exemplo, logar ou notificar o usuário
+                System.err.println("Erro ao criar evento no Google Calendar: " + e.getMessage());
+                // e.printStackTrace(); // Descomente para debug mais detalhado
+            }
         }
 
         webhookService.sendMessageByUser(user, "Task " + saved.getTitle() + " criada!");
@@ -96,4 +103,4 @@ public class TaskService {
 
         webhookService.sendMessageByUser(task.getUser(), "Task " + task.getTitle() + " deletada!");
     }
-} 
+}

@@ -3,10 +3,14 @@ package com.uni.task.er.controller;
 import com.uni.task.er.dto.request.TaskCreateRequest;
 import com.uni.task.er.dto.request.TaskUpdateRequest;
 import com.uni.task.er.dto.response.TaskResponse;
+import com.uni.task.er.model.User; // Import User
 import com.uni.task.er.service.TaskService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,6 +28,25 @@ public class TaskController {
     @PostMapping
     public TaskResponse create(@RequestBody TaskCreateRequest request) {
         return taskService.create(request);
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<TaskResponse> createTaskWithGoogleCalendar(
+            @RequestBody TaskCreateRequest request,
+            @RequestAttribute("user") User user) {
+        if (user == null || user.getId() == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário não autenticado ou ID do usuário não encontrado.");
+        }
+        request.setUserId(user.getId());
+        try {
+            TaskResponse taskResponse = taskService.create(request);
+            return ResponseEntity.ok(taskResponse);
+        } catch (Exception e) {
+            if (e.getMessage() != null && e.getMessage().contains("Usuário não autenticado com o Google")) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
+            }
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao criar task: " + e.getMessage(), e);
+        }
     }
 
     @GetMapping("/{id}")
@@ -48,4 +71,4 @@ public class TaskController {
     public void delete(@PathVariable Long id) {
         taskService.delete(id);
     }
-} 
+}

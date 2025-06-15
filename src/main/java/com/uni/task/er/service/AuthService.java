@@ -1,6 +1,7 @@
 package com.uni.task.er.service;
 
 import com.uni.task.er.dto.request.AuthLoginRequest;
+import com.uni.task.er.dto.response.AuthLoginResponse; // Importar AuthLoginResponse
 import com.uni.task.er.exception.custom.NotFoundException;
 import com.uni.task.er.exception.custom.UnauthorizedException;
 import com.uni.task.er.model.User;
@@ -23,12 +24,14 @@ public class AuthService {
         this.jwtBlocklistService = jwtBlocklistService;
     }
 
-    public String login(AuthLoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
+    public AuthLoginResponse login(AuthLoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado ou senha inválida"));
         boolean validPassword = PasswordUtils.checkPassword(request.getPassword(), user.getPassword());
-        if(!validPassword) throw new UnauthorizedException("Invalid email or password");
+        if (!validPassword) throw new UnauthorizedException("Usuário não encontrado ou senha inválida");
 
-        return JwtUtils.generateToken(user.getEmail());
+        String token = JwtUtils.generateToken(user.getEmail(), user.getId()); // Passar userId para o token
+        return new AuthLoginResponse(token, user.getId(), user.getName());
     }
 
     public void logout(String bearerToken) {

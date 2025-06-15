@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login com Google - Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem 3rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        button {
+            background: #4285F4;
+            color: #fff;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #3367d6;
+        }
+
+        .success {
+            color: green;
+            margin-top: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Login com Google</h2>
+        <button id="loginBtn">Entrar com Google</button>
+        <div id="msg" class="success" style="display:none;"></div>
+    </div>
+    <script>
+        document.getElementById('loginBtn').onclick = async function () {
+            const res = await fetch('/google/auth-url');
+            const url = await res.text();
+            window.location.href = url;
+        };
+        // Detecta se está na callback
+        if (window.location.pathname === '/google/oauth-callback' && window.location.search.includes('code=')) {
+            document.querySelector('.container').innerHTML = '<h2>Login realizado com sucesso!</h2><p>Você já pode fechar esta janela.</p>';
+        }
+    </script>
+</body>
+
+</html>

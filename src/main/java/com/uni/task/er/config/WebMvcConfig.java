@@ -20,5 +20,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         ir.excludePathPatterns("/users/register");
         ir.excludePathPatterns("/swagger-ui/**");
         ir.excludePathPatterns("/v3/api-docs/**");
+        ir.excludePathPatterns("/google/**"); 
+        ir.excludePathPatterns("/*.html"); 
+        ir.excludePathPatterns("/static/**");
     }
 }
