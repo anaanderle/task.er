@@ -12,7 +12,6 @@ import com.uni.task.er.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,20 +33,18 @@ public class TaskService {
 
     public TaskResponse create(TaskCreateRequest request) {
         User user = userRepository.findById(request.getUserId())
-            .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
         Task task = TaskMapper.toModel(request, user);
         Task saved = taskRepository.save(task);
 
-        // Integrar com o Google Calendar
         try {
             googleCalendarService.criarEvento(
-                request.getTitle(), 
-                request.getDescription(), 
-                request.getStartDate(), 
-                request.getEndDate()
+                    request.getTitle(),
+                    request.getDescription(),
+                    request.getStartDate(),
+                    request.getEndDate()
             );
         } catch (Exception e) {
-            // Trate o erro conforme sua necessidade
             e.printStackTrace();
         }
 
@@ -58,7 +55,7 @@ public class TaskService {
 
     public TaskResponse getById(Long id) {
         Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Task not found"));
+                .orElseThrow(() -> new NotFoundException("Task not found"));
         return TaskMapper.toResponse(task);
     }
 
@@ -67,17 +64,17 @@ public class TaskService {
             throw new NotFoundException("User ID is required");
         }
         return taskRepository.findByUserId(userId).stream()
-            .map(TaskMapper::toResponse)
-            .collect(Collectors.toList());
+                .map(TaskMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     public TaskResponse update(Long id, TaskUpdateRequest request) {
         Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Task not found"));
+                .orElseThrow(() -> new NotFoundException("Task not found"));
         Task updatedTask = TaskMapper.toModel(request, task);
         if (request.getUserId() != null) {
             User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                    .orElseThrow(() -> new NotFoundException("User not found"));
             updatedTask.setUser(user);
         }
         Task saved = taskRepository.save(updatedTask);
