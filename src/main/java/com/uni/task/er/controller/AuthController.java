@@ -4,6 +4,7 @@ import com.uni.task.er.dto.request.AuthLoginRequest;
 import com.uni.task.er.exception.TaskerException;
 import com.uni.task.er.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,10 +40,10 @@ public class AuthController {
 
     @Operation(description = "Logout")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Realize o logout com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Realizou o logout com sucesso"),
     })
     @DeleteMapping
-    public void logout(@RequestHeader("Authorization") String bearerToken) {
+    public void logout(@Parameter(hidden = true) @RequestHeader("Authorization") String bearerToken) {
         authService.logout(bearerToken);
     }
 }

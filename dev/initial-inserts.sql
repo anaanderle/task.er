@@ -1,0 +1,33 @@
+INSERT INTO public."system_user" (id, birthday, cellphone, deleted, email, name, "password")
+VALUES (nextval('system_user_seq'), '1990-04-15', '51990000001', false, 'emma.watson@gmail.com', 'Emma Watson',
+        '$2a$10$sbQMMjI9Ub2p/n8T1UgakuuROH1NLDqtmBZahS3qoDHPqG7an5tBW'),
+       (nextval('system_user_seq'), '1989-07-23', '51990000002', false, 'daniel.radcliffe@gmail.com',
+        'Daniel Radcliffe',
+        '$2a$10$3dZYDOrM.0gC7bBprrpCx.RSy3/X5S1EeiJ.5Ajqu871KmeZjMDwS'),
+       (nextval('system_user_seq'), '1988-08-24', '51990000003', false, 'rupert.grint@gmail.com', 'Rupert Grint',
+        '$2a$10$b8EPuENHfVjcnni0J3YR9eQflrKe.ndhVar8A/7w/o1WcUENlZi/m'),
+       (nextval('system_user_seq'), '1992-02-10', '51990000004', false, 'tom.holland@gmail.com', 'Tom Holland',
+        '$2a$10$sbQMMjI9Ub2p/n8T1UgakuuROH1NLDqtmBZahS3qoDHPqG7an5tBW'),
+       (nextval('system_user_seq'), '1991-09-12', '51990000005', false, 'zendaya@gmail.com', 'Zendaya',
+        '$2a$10$3dZYDOrM.0gC7bBprrpCx.RSy3/X5S1EeiJ.5Ajqu871KmeZjMDwS'),
+       (nextval('system_user_seq'), '1985-06-21', '51990000006', false, 'scarlett.johansson@gmail.com',
+        'Scarlett Johansson',
+        '$2a$10$b8EPuENHfVjcnni0J3YR9eQflrKe.ndhVar8A/7w/o1WcUENlZi/m'),
+       (nextval('system_user_seq'), '1981-01-05', '51990000007', false, 'chris.evans@gmail.com', 'Chris Evans',
+        '$2a$10$sbQMMjI9Ub2p/n8T1UgakuuROH1NLDqtmBZahS3qoDHPqG7an5tBW'),
+       (nextval('system_user_seq'), '1979-06-13', '51990000008', false, 'chris.hemsworth@gmail.com', 'Chris Hemsworth',
+        '$2a$10$3dZYDOrM.0gC7bBprrpCx.RSy3/X5S1EeiJ.5Ajqu871KmeZjMDwS'),
+       (nextval('system_user_seq'), '1980-08-11', '51990000009', false, 'mark.ruffalo@gmail.com', 'Mark Ruffalo',
+        '$2a$10$b8EPuENHfVjcnni0J3YR9eQflrKe.ndhVar8A/7w/o1WcUENlZi/m'),
+       (nextval('system_user_seq'), '1975-04-04', '51990000010', false, 'robert.downey@gmail.com', 'Robert Downey Jr.',
+        '$2a$10$sbQMMjI9Ub2p/n8T1UgakuuROH1NLDqtmBZahS3qoDHPqG7an5tBW');
+
+INSERT INTO public.task (id, description, status, title, user_id)
+VALUES (nextval('task_seq'), 'Preparar slides para a apresentação do projeto na segunda-feira.', 'pendente',
+        'Preparar Apresentação', 1),
+       (nextval('task_seq'), 'Revisar e dar feedback no relatório da equipe.', 'em_andamento', 'Revisar Relatório', 1),
+       (nextval('task_seq'), 'Agendar reunião com o departamento de marketing.', 'pendente',
+        'Agendar Reunião de Marketing', 1),
+       (nextval('task_seq'), 'Atualizar a documentação do projeto com as últimas alterações.', 'concluída',
+        'Atualizar Documentação', 1),
+       (nextval('task_seq'), 'Organizar arquivos e limpar o drive compartilhado.', 'pendente', 'Organizar Drive', 1);

@@ -57,6 +57,15 @@ bash ./mvnw clean install
 ./mvnw spring-boot:run
 ```
 
+### Testes
+
+Foram realizados testes de unidade e integração nas principais funcionalidades da aplicação.
+Para rodar os testes, execute o seguinte comando:
+
+```bash 
+./mvnw clean test
+```
+
 ### Tecnologias 💻
 
 - Java 21
@@ -64,6 +73,7 @@ bash ./mvnw clean install
 - PostgreSQL
 - Docker
 - Swagger
+- JUnit
 
 ### Padrões 📝
 
