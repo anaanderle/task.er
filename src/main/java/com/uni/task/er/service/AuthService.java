@@ -26,7 +26,7 @@ public class AuthService {
     public String login(AuthLoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
         boolean validPassword = PasswordUtils.checkPassword(request.getPassword(), user.getPassword());
-        if(!validPassword) throw new UnauthorizedException("Invalid email or password");
+        if (!validPassword) throw new UnauthorizedException("Invalid email or password");
 
         return JwtUtils.generateToken(user.getId().toString());
     }
@@ -37,9 +37,9 @@ public class AuthService {
     }
 
     public User validateToken(String token) {
-        String email = JwtUtils.validateTokenAndGetUsername(token);
+        String id = JwtUtils.validateTokenAndGetUsername(token);
 
-        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        return userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User getUserInfo() {
