@@ -28,7 +28,7 @@ public class AuthService {
         boolean validPassword = PasswordUtils.checkPassword(request.getPassword(), user.getPassword());
         if(!validPassword) throw new UnauthorizedException("Invalid email or password");
 
-        return JwtUtils.generateToken(user.getEmail());
+        return JwtUtils.generateToken(user.getId().toString());
     }
 
     public void logout(String bearerToken) {
